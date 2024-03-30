@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
-from selenium import webdriver
+from seleniumwire import webdriver
+import logging
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.proxy import Proxy, ProxyType
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
+from selenium.webdriver.chrome.options import Options
 import unittest, time, re
 import random
+
+# logging.basicConfig(filename='web_automation.log')
+chrome_options = Options()
+chrome_options.add_argument("--headless")
 
 options_list = [
     "Select option",
@@ -23,11 +30,18 @@ options_list = [
     "Other"
 ]
 
+proxy_options = {
+    'proxy': {
+        'http': f'http://Addensure:Welcome123_country-in_streaming-1@geo.iproyal.com:12321',
+        'https': f'http://Addensure:Welcome123_country-in_streaming-1@geo.iproyal.com:12321',
+    
+    }
+}
+
 def main():
-    try:
-        driver = webdriver.Chrome()
-        driver.get("https://track.adzmonk.com/click?pid=15&offer_id=887")
-        
+    driver = webdriver.Chrome(seleniumwire_options=proxy_options ,options=chrome_options)
+    try:     
+        driver.get("https://track.adzmonk.com/click?pid=15&offer_id=887")    
         driver.find_element(By.ID, "onetrust-accept-btn-handler").click()
         time.sleep(2)
         driver.find_element(By.ID, "oppp").click()
@@ -60,12 +74,15 @@ def main():
         driver.execute_script("arguments[0].style.display = 'block';", element)
         time.sleep(5)
         driver.find_element(By.LINK_TEXT,"Redeem Now").click()
-        time.sleep(5)
+        with open('data.txt', 'w') as file:
+            file.write('1')
+
+        time.sleep(25)
         driver.quit()
     except Exception as e:
-        print(str(e))
-        driver.quit()
+        print(f"An error occurred: {e}")
     finally:
         driver.quit()
-main()
+for i in range(10000):
+    main()
 
